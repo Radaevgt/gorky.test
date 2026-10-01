@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f1ea" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#17140f" media="(prefers-color-scheme: dark)">
+<title>Тест МОТИП</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f1ea;
+    --surface: #fffdf9;
+    --surface-2: #efe9df;
+    --ink: #1f1b16;
+    --muted: #6d655b;
+    --line: #e2d9cb;
+    --accent: #c2532d;
+    --accent-ink: #ffffff;
+    --accent-soft: #f6e1d6;
+    --shadow: 0 1px 2px rgba(40, 28, 15, .06), 0 12px 32px -12px rgba(40, 28, 15, .18);
+    --bar-bg: rgba(245, 241, 234, .92);
+    --t-in: #c2532d;
+    --t-pr: #2d6a8f;
+    --t-pa: #4f8a4b;
+    --t-ho: #b08a1e;
+    --t-lu: #7c6f86;
+    --radius: 16px;
+    --safe-b: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #17140f;
+      --surface: #211d17;
+      --surface-2: #2b261e;
+      --ink: #f1ebe2;
+      --muted: #a89e90;
+      --line: #3a342a;
+      --accent: #e5774f;
+      --accent-ink: #1a120c;
+      --accent-soft: #3a2519;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 16px 40px -16px rgba(0,0,0,.6);
+      --bar-bg: rgba(23, 20, 15, .92);
+      --t-in: #e5774f;
+      --t-pr: #5fa3cc;
+      --t-pa: #7dbb78;
+      --t-ho: #d9b44a;
+      --t-lu: #a99bb3;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #17140f;
+    --surface: #211d17;
+    --surface-2: #2b261e;
+    --ink: #f1ebe2;
+    --muted: #a89e90;
+    --line: #3a342a;
+    --accent: #e5774f;
+    --accent-ink: #1a120c;
+    --accent-soft: #3a2519;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 16px 40px -16px rgba(0,0,0,.6);
+    --bar-bg: rgba(23, 20, 15, .92);
+    --t-in: #e5774f;
+    --t-pr: #5fa3cc;
+    --t-pa: #7dbb78;
+    --t-ho: #d9b44a;
+    --t-lu: #a99bb3;
+  }
+
+  /* ---------- Base (mobile first) ---------- */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    min-height: 100vh;
+    min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button { touch-action: manipulation; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 12px 16px 24px; }
+  body.has-bar .wrap { padding-bottom: calc(132px + var(--safe-b)); }
+
+  header.top {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 44px; margin-bottom: 8px;
+  }
+  .brand { font-weight: 700; letter-spacing: .1em; font-size: 12px; text-transform: uppercase; color: var(--muted); }
+  .brand b { color: var(--accent); }
+  .brand span { display: none; }
+  .icon-btn {
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+    width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
+    display: grid; place-items: center; font-size: 18px;
+  }
+
+  h1, h2, h3 { font-family: "Playfair Display", Georgia, serif; line-height: 1.2; margin: 0; }
+  h1 { font-size: 30px; }
+  h2 { font-size: 21px; }
+  .muted { color: var(--muted); }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px 16px;
+  }
+
+  .btn {
+    font: inherit; font-weight: 700; font-size: 16px;
+    border: 1px solid transparent; border-radius: 14px;
+    min-height: 52px; padding: 0 20px; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: transform .12s ease, opacity .15s;
+  }
+  .btn:active { transform: scale(.98); }
+  .btn-primary { background: var(--accent); color: var(--accent-ink); }
+  .btn-primary:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+  .btn-ghost { background: var(--surface); color: var(--ink); border-color: var(--line); }
+  .btn-ghost:disabled { opacity: .35; cursor: not-allowed; }
+  .btn-block { width: 100%; }
+
+  /* Intro */
+  .intro .eyebrow { color: var(--accent); font-weight: 700; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; }
+  .intro p { margin: 14px 0 0; }
+  .facts { display: flex; gap: 8px; flex-wrap: wrap; margin: 20px 0 24px; }
+  .fact { background: var(--surface-2); border-radius: 999px; padding: 6px 12px; font-size: 14px; color: var(--muted); }
+  .intro-actions { display: grid; gap: 10px; }
+  .types-preview { display: flex; gap: 6px; margin-top: 24px; }
+  .types-preview span { flex: 1; height: 6px; border-radius: 3px; }
+
+  /* Sticky progress */
+  .progress {
+    position: sticky; top: 0; z-index: 5;
+    background: var(--bg);
+    margin: 0 -16px 12px; padding: 8px 16px 10px;
+  }
+  .progress-meta { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin-bottom: 6px; font-variant-numeric: tabular-nums; }
+  .progress-bar { height: 6px; border-radius: 3px; background: var(--surface-2); overflow: hidden; }
+  .progress-bar > i { display: block; height: 100%; background: var(--accent); border-radius: 3px; transition: width .35s ease; }
+
+  /* Question */
+  .group-note { font-size: 14px; color: var(--muted); background: var(--surface-2); border-radius: 10px; padding: 8px 12px; margin-bottom: 12px; }
+  .q-num { font-family: "Playfair Display", Georgia, serif; color: var(--accent); font-size: 16px; font-weight: 700; }
+  .q-text { margin: 4px 0 10px; }
+  .q-hint { font-size: 14px; color: var(--muted); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .q-hint .pill { background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 2px 10px; font-weight: 700; font-size: 13px; }
+  .options { display: grid; gap: 8px; }
+  .opt {
+    display: flex; gap: 12px; align-items: flex-start; text-align: left;
+    width: 100%; min-height: 56px; font: inherit; font-size: 16px; color: inherit;
+    background: var(--surface); border: 1.5px solid var(--line); border-radius: 14px;
+    padding: 12px 14px; cursor: pointer;
+    transition: border-color .15s, background .15s, transform .1s;
+  }
+  .opt:active { transform: scale(.99); }
+  .opt:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .opt .mark {
+    flex: none; width: 30px; height: 30px; border-radius: 9px;
+    display: grid; place-items: center;
+    background: var(--surface-2); color: var(--muted);
+    font-weight: 700; font-size: 14px;
+    transition: background .15s, color .15s;
+  }
+  .opt.radio .mark { border-radius: 50%; }
+  .opt[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+  .opt[aria-pressed="true"] .mark { background: var(--accent); color: var(--accent-ink); }
+  .opt .label { padding-top: 3px; }
+  .shake { animation: shake .35s ease; }
+  @keyframes shake { 20%,60% { transform: translateX(-4px); } 40%,80% { transform: translateX(4px); } }
+
+  /* Bottom action bar (thumb zone) */
+  .bottom-bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+    background: var(--bar-bg);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border-top: 1px solid var(--line);
+    padding: 8px 16px calc(12px + var(--safe-b));
+  }
+  .bottom-bar .inner { max-width: 720px; margin: 0 auto; }
+  .toast { min-height: 20px; font-size: 13px; line-height: 1.35; color: var(--accent); margin-bottom: 6px; text-align: center; }
+  .nav { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; }
+  .kbd-hint { display: none; }
+  kbd { font-family: inherit; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 0 5px; font-size: 12px; }
+
+  .fade { animation: fade .3s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* Results */
+  .stack > * + * { margin-top: 12px; }
+  .result-head .eyebrow { color: var(--muted); font-size: 14px; margin-bottom: 6px; }
+  .lead-type { font-size: 28px; }
+  .lead-desc { margin: 12px 0 0; }
+  .section h3, .card h3 { font-size: 20px; margin-bottom: 14px; }
+
+  .bars { display: grid; gap: 16px; }
+  .bar-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 12px; row-gap: 6px; }
+  .bar-name { font-weight: 600; font-size: 15px; display: flex; align-items: baseline; gap: 6px; min-width: 0; }
+  .bar-name > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-name small { color: var(--muted); font-weight: 500; font-size: 13px; flex: none; }
+  .bar-track { grid-column: 1 / -1; grid-row: 2; height: 12px; background: var(--surface-2); border-radius: 6px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 6px; width: 0; transition: width .9s cubic-bezier(.2,.8,.2,1); }
+  .bar-val { display: flex; align-items: baseline; justify-content: flex-end; gap: 8px; font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; }
+  .bar-val small { font-weight: 500; color: var(--muted); font-size: 13px; min-width: 34px; text-align: right; }
+  .bar-row.lead .bar-name { color: var(--accent); }
+
+  .type-cards { display: grid; gap: 10px; }
+  .type-card { border: 1px solid var(--line); border-left: 4px solid var(--c); border-radius: 12px; padding: 12px 14px; }
+  .type-card h4 { margin: 0 0 4px; font-size: 16px; display: flex; justify-content: space-between; gap: 10px; }
+  .type-card p { margin: 0; font-size: 15px; color: var(--muted); }
+
+  details.key summary { cursor: pointer; font-weight: 700; list-style: none; display: flex; align-items: center; gap: 8px; min-height: 44px; }
+  details.key summary::-webkit-details-marker { display: none; }
+  details.key summary::before { content: "▸"; color: var(--accent); transition: transform .15s; }
+  details.key[open] summary::before { transform: rotate(90deg); }
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; font-variant-numeric: tabular-nums; }
+  th, td { padding: 8px 6px; border-bottom: 1px solid var(--line); text-align: center; white-space: nowrap; }
+  th { background: var(--surface-2); font-weight: 700; }
+  td:first-child, th:first-child { text-align: left; padding-left: 10px; }
+  td.hit { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+  td.key-cell { color: var(--muted); }
+  tfoot td { font-weight: 700; background: var(--surface-2); border-bottom: none; }
+
+  .actions { display: grid; gap: 10px; margin-top: 16px; }
+
+  /* ---------- Hover only on real pointers ---------- */
+  @media (hover: hover) {
+    .icon-btn:hover { border-color: var(--accent); }
+    .opt:hover { border-color: var(--muted); }
+    .opt[aria-pressed="true"]:hover { border-color: var(--accent); }
+    .btn-primary:hover:not(:disabled) { filter: brightness(1.05); }
+    .btn-ghost:hover:not(:disabled) { border-color: var(--muted); }
+  }
+
+  /* ---------- Tablet / desktop ---------- */
+  @media (min-width: 640px) {
+    .wrap { padding: 28px 24px 48px; }
+    header.top { margin-bottom: 20px; }
+    .brand span { display: inline; }
+    h1 { font-size: 46px; }
+    h2 { font-size: 27px; }
+    .card { padding: 32px; border-radius: 20px; }
+    .intro-actions { display: flex; gap: 12px; }
+    .intro-actions .btn { width: auto; }
+    .progress { margin: 0 0 16px; padding: 8px 0 10px; }
+    .lead-type { font-size: 40px; }
+    .stack > * + * { margin-top: 18px; }
+    .bar-row { grid-template-columns: 220px minmax(0, 1fr) 92px; column-gap: 16px; }
+    .bar-name { justify-content: space-between; }
+    .bar-track { grid-column: auto; grid-row: auto; height: 14px; border-radius: 7px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .actions .btn { width: auto; }
+    table { font-size: 14px; }
+    th, td { padding: 8px 10px; }
+  }
+  @media (min-width: 640px) and (hover: hover) {
+    .kbd-hint { display: block; text-align: center; font-size: 13px; color: var(--muted); margin-top: 18px; }
+    body.has-bar .wrap { padding-bottom: 48px; }
+    .bottom-bar { position: static; background: none; border: 0; padding: 0; -webkit-backdrop-filter: none; backdrop-filter: none; }
+    .bottom-bar { margin-top: 8px; }
+    .bottom-bar .inner { max-width: none; }
+    .nav { display: flex; justify-content: space-between; }
+    .nav .btn { min-width: 150px; }
+    .toast { text-align: left; margin: 12px 0 8px; }
+  }
+
+  @media print {
+    header.top, .actions, .kbd-hint, .bottom-bar { display: none; }
+    body { background: #fff; }
+    .card { box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><b>МОТИП</b><span> · тест мотивации Герчикова</span></div>
+    <button class="icon-btn" id="themeBtn" title="Сменить тему" aria-label="Сменить тему">◐</button>
+  </header>
+  <main id="app">
+    <section class="card">
+      <h2>Тест МОТИП</h2>
+      <p class="muted" id="jsWarn">Если вы видите этот текст, значит, в этом приложении не работает JavaScript. Откройте файл в обычном браузере: Chrome, Safari, Яндекс Браузер.</p>
+    </section>
+  </main>
+</div>
+
+<script>
+window.onerror = function (msg, src, line) {
+  var w = document.getElementById("jsWarn");
+  if (w) w.textContent = "Ошибка: " + msg + " (строка " + line + ")";
+};
+</script>
+<script>
+// ---------- Data ----------
+const LETTERS = ["а", "б", "в", "г", "д", "е", "ж", "з"];
+const IMP = ["очень важно", "не очень важно", "совсем не важно"];
+
+const TYPES = {
+  IN: { name: "Инструментальный", short: "ИН", color: "var(--t-in)",
+    desc: "Сам процесс работы не является для такого сотрудника значимой ценностью, она только источник заработка. Работа — это инструмент достижения других целей. Сотрудник с таким типом мотивации будет работать с максимальной отдачей на любой работе, если его труд будет справедливо и высоко (в его понимании) оплачиваться. Скорее всего, будет эффективным и вовлечённым в сфере продаж и продвижения." },
+  PR: { name: "Профессиональный", short: "ПР", color: "var(--t-pr)",
+    desc: "Сотрудник с таким типом мотивации ценит в работе её содержание, возможность развиваться, повышать профессиональный уровень, самореализовываться, решать сложные задачи. Такие сотрудники оказываются вовлечёнными в работу полностью и часто имеют репутацию лучших по профессии в компании. Этим типом мотивации, как правило, обладают врачи, юристы, преподаватели, узкие специалисты." },
+  PA: { name: "Патриотический", short: "ПА", color: "var(--t-pa)",
+    desc: "Для работников этого типа важно чувствовать себя частью коллектива, бренда, принимать участие в реализации общего дела. Им важно чувствовать себя нужными. Важно общественное признание своих достижений. Готовы брать на себя повышенные обязательства и дополнительную работу ради этого. Среди обладателей этого типа мотивации встречаются представители всех профессий." },
+  HO: { name: "Хозяйский", short: "ХО", color: "var(--t-ho)",
+    desc: "Такой работник готов взять на себя полную ответственность за выполняемую работу. Предпочитает действовать самостоятельно, не приветствует промежуточный контроль. Будет выполнять работу с максимальной отдачей, не настаивая на её особой интересности или высокой оплате, не требуя дополнительных указаний. Часто противопоставляет себя коллективу. Таким типом обладают люди с задатками предпринимателей — хорошие проектные менеджеры." },
+  LU: { name: "Люмпенизированный", short: "ЛЮ", color: "var(--t-lu)",
+    desc: "Работник этого типа обладает очень слабой мотивацией к эффективной работе. Его основное стремление — минимизировать свои трудовые усилия на уровне, допустимом со стороны непосредственного руководителя. Вовлечь сотрудников с такой мотивацией очень сложно. Представители этого типа — линейные сотрудники, технический персонал." },
+};
+const TYPE_ORDER = ["IN", "PR", "PA", "HO", "LU"];
+
+// max: how many answers allowed (1, 2 or Infinity)
+// key: answer numbers (1 = "а") that give a point to each type
+const QUESTIONS = [
+  { id: 1, max: 2, text: "Что Вы больше всего цените в своей работе?",
+    options: ["то, что я в основном сам решаю, что и как мне делать", "то, что она дает мне возможность проявить то, что я знаю и умею", "то, что я чувствую себя полезным и нужным", "то, что мне за нее относительно неплохо платят", "особенно ничего не ценю, но эта работа мне хорошо знакома и привычна"],
+    key: { IN: [4], PR: [2], PA: [3], HO: [1], LU: [5] } },
+  { id: 2, max: 1, text: "Какое выражение из перечисленных ниже Вам подходит более всего?",
+    options: ["я хочу обеспечить своим трудом себе и своей семье приличный доход", "в своей работе я полный хозяин", "у меня достаточно знаний и опыта, чтобы справиться с любыми трудностями в моей работе", "я ценный, незаменимый для организации работник", "я всегда выполняю то, что от меня требуют"],
+    key: { IN: [1], PR: [3], PA: [4], HO: [2], LU: [5] } },
+  { id: 3, max: 2, text: "Как Вы предпочитаете работать?",
+    options: ["предпочитаю делать то, что знакомо, привычно", "нужно, чтобы в работе постоянно появлялось что-то новое, чтобы не стоять на месте", "чтобы было точно известно, что нужно сделать и что я за это получу", "предпочитаю работать под полную личную ответственность", "готов(а) делать все, что нужно для организации"],
+    key: { IN: [3], PR: [2], PA: [5], HO: [4], LU: [1] } },
+  { id: 4, max: 2, text: "Допустим, что Вам предлагают другую работу в Вашей организации. При каких условиях Вы бы на это согласились?",
+    options: ["если предложат намного более высокую зарплату", "если другая работа будет более творческой и интересной, чем нынешняя", "если новая работа даст мне больше самостоятельности", "если это очень нужно для организации", "при всех обстоятельствах я предпочел (предпочла) бы остаться на той работе, к которой привык (привыкла)"],
+    key: { IN: [1], PR: [2], PA: [4], HO: [3], LU: [5] } },
+  { id: 5, max: 2, text: "Попробуйте определить, что для Вас означает Ваш заработок?",
+    options: ["плата за время и усилия, потраченные на выполнение работы", "это прежде всего плата за мои знания, квалификацию", "оплата за общие результаты деятельности организации", "мне нужен гарантированный заработок – пусть небольшой, но чтобы он был", "какой бы он ни был, я его заработал(а) сам(а)"],
+    key: { IN: [1], PR: [2], PA: [3], HO: [5], LU: [4] } },
+  { id: 6, max: 1, group: true, text: "Заработная плата и премии", options: IMP,
+    key: { IN: [1] } },
+  { id: 7, max: 1, group: true, text: "Доплаты за квалификацию", options: IMP,
+    key: { IN: [1], PR: [1], PA: [3], HO: [3] } },
+  { id: 8, max: 1, group: true, text: "Доплаты за тяжелые и вредные условия работы", options: IMP,
+    key: { IN: [1], PR: [3], PA: [3], LU: [1] } },
+  { id: 9, max: 1, group: true, text: "Социальные выплаты и льготы, пособия", options: IMP,
+    key: { PR: [3], LU: [1] } },
+  { id: 10, max: 1, group: true, text: "Доходы от капитала, акций", options: IMP,
+    key: { IN: [3], PR: [3], PA: [3], HO: [1], LU: [3] } },
+  { id: 11, max: 1, group: true, text: "Любые дополнительные приработки", options: IMP,
+    key: { IN: [1], PA: [3], LU: [1] } },
+  { id: 12, max: 1, group: true, text: "Приработки, но не любые, а только по своей специальности", options: IMP,
+    key: { IN: [1], PR: [1], HO: [3], LU: [3] } },
+  { id: 13, max: 1, group: true, text: "Доходы от личного хозяйства, дачного участка и т. п.", options: IMP,
+    key: { HO: [1] } },
+  { id: 14, max: 1, group: true, text: "Выигрыш в лотерею, казино и т. п.", options: IMP,
+    key: { IN: [3], PR: [3], LU: [1] } },
+  { id: 15, max: 1, text: "На каких принципах, по-вашему, должны строиться отношения между работником и организацией?",
+    options: ["работник должен относиться к организации как к своему дому, отдавать ей все и вместе переживать трудности и подъемы. Организация должна соответственно оценивать преданность и труд работника", "работник продает организации свой труд, и если ему не дают хорошую цену, он вправе найти другого покупателя", "работник приходит в организацию для самореализации и относится к ней как к месту реализации своих способностей. Организация должна обеспечивать работнику такую возможность, извлекать из этого выгоду для себя и на этой основе развиваться", "работник тратит на организацию свои силы, а организация должна взамен гарантировать ему зарплату и социальные блага"],
+    key: { IN: [2], PR: [3], PA: [1], HO: [1], LU: [4] } },
+  { id: 16, max: 2, text: "Как Вы считаете, почему в процессе работы люди проявляют инициативу, вносят различные предложения?",
+    options: ["чувствуют особую ответственность за свою работу", "из-за стремления реализовать свои знания и опыт, выйти за установленные работой рамки", "чаще всего из-за желания улучшить работу своей организации", "просто хотят выделиться или завоевать расположение начальства", "хотят заработать, поскольку всякая полезная инициатива должна вознаграждаться"],
+    key: { IN: [5], PR: [2], PA: [3], HO: [1], LU: [4] } },
+  { id: 17, max: 2, text: "Какое суждение о коллективной работе Вам ближе?",
+    options: ["коллектив для меня очень важен, одному хороших результатов не добиться", "предпочитаю работать автономно, но чувствую себя так же хорошо, когда работаю вместе с интересными людьми", "мне нужна свобода действий, а коллектив чаще всего эту свободу ограничивает", "можно работать и в коллективе, но платить должны по личным результатам", "мне нравится работать в коллективе, так как там я среди своих"],
+    key: { IN: [4], PR: [2], PA: [1], HO: [3], LU: [5] } },
+  { id: 18, max: 2, text: "Представьте себе, что у Вас появилась возможность стать владельцем Вашей организации. Воспользуетесь ли Вы этой возможностью?",
+    options: ["да, так как я смогу участвовать в управлении организацией", "да, потому что это может увеличить мой доход", "да, так как настоящий работник должен быть совладельцем", "вряд ли: на заработке это не скажется, участие в управлении меня не интересует, а работе это помешает", "нет, не нужны мне лишние заботы"],
+    key: { IN: [2], PR: [4], PA: [1], HO: [3, 1], LU: [5] } },
+  { id: 19, max: 2, text: "Представьте, пожалуйста, что Вы сейчас ищете работу. Вам предлагают несколько работ. Какую из них Вы выберете?",
+    options: ["наиболее интересную, творческую", "наиболее самостоятельную, независимую", "за которую больше платят", "чтобы за не слишком большие деньги не требовалось особенно «надрываться»", "не могу представить, что я уйду из нашей организации"],
+    key: { IN: [3], PR: [1], PA: [5], HO: [2], LU: [4] } },
+  { id: 20, max: 2, text: "Что Вы прежде всего учитываете, когда оцениваете успехи другого работника в Вашей организации?",
+    options: ["его зарплату, доходы, материальное положение", "уровень его профессионализма, квалификации", "насколько хорошо он «устроился»", "насколько его уважают в организации", "насколько он самостоятелен, независим"],
+    key: { IN: [1], PR: [2], PA: [4], HO: [5], LU: [3] } },
+  { id: 21, max: Infinity, text: "Если положение в Вашей организации ухудшится, на какие перемены в Вашей работе и положении Вы согласитесь ради того, чтобы остаться на работе?",
+    options: ["освоить новую профессию", "работать неполный рабочий день или перейти на менее квалифицированную работу и меньше получать", "перейти на менее удобный режим работы", "работать более интенсивно", "соглашусь просто терпеть, потому что деваться некуда", "скорее всего я просто уйду из этой организации"],
+    key: { IN: [4, 6], PR: [1, 4, 7], PA: [1, 2, 4, 5], HO: [1, 2, 4], LU: [2, 5] } },
+  { id: 22, max: 2, text: "Если Вы руководитель, то что Вас привлекает прежде всего в этом положении?",
+    options: ["возможность принимать самостоятельные, ответственные решения", "возможность принести наибольшую пользу организации", "высокий уровень оплаты", "возможность организовывать работу других людей", "возможность наилучшим образом применить свои знания и умения", "ничего особенно не привлекает, за положение руководителя не держусь"],
+    key: { IN: [3, 6], PR: [5], PA: [2], HO: [1], LU: [4] } },
+  { id: 23, max: 2, text: "Если Вы не являетесь руководителем, то хотели бы Вы им стать?",
+    options: ["да, поскольку это даст возможность принимать самостоятельные, ответственные решения", "не против, если это нужно для пользы дела", "да, так как при этом я смогу лучше применить свои знания и умения", "да, если это будет должным образом оплачиваться", "нет, профессионал может отвечать только за самого себя", "нет, руководство меня не привлекает, а хорошо заработать я могу и на своем месте", "да, чем я хуже других", "нет, это слишком большая нагрузка для меня"],
+    key: { IN: [4, 6], PR: [3, 5], PA: [2], HO: [1, 3], LU: [7, 8] } },
+];
+
+const ROLE_STEP = { id: "role", max: 1, text: "Являетесь ли Вы руководителем?",
+  options: ["да, я руководитель", "нет, я не руководитель"] };
+
+// ---------- State ----------
+const STORE_KEY = "motip-state-v1";
+let state = { screen: "intro", step: 0, answers: {} };
+
+function save() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+}
+function load() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) state = Object.assign(state, JSON.parse(raw));
+  } catch (e) {}
+}
+
+// Steps: Q1–21, role gate, then Q22 (leader) or Q23 (not a leader)
+function steps() {
+  const list = QUESTIONS.slice(0, 21);
+  list.push(ROLE_STEP);
+  const role = state.answers.role;
+  list.push(role && role[0] === 2 ? QUESTIONS[22] : QUESTIONS[21]);
+  return list;
+}
+
+// ---------- Scoring ----------
+function score() {
+  const totals = {};
+  TYPE_ORDER.forEach(t => { totals[t] = 0; });
+  const rows = [];
+  for (const q of QUESTIONS) {
+    const picked = state.answers[q.id];
+    if (!picked || !picked.length) continue;
+    const hits = {};
+    for (const t of TYPE_ORDER) {
+      const keys = q.key[t] || [];
+      // Each matching answer gives one point
+      hits[t] = picked.filter(a => keys.includes(a)).length;
+      totals[t] += hits[t];
+    }
+    rows.push({ q, picked, hits });
+  }
+  const sum = TYPE_ORDER.reduce((s, t) => s + totals[t], 0);
+  const max = Math.max(...TYPE_ORDER.map(t => totals[t]));
+  const leaders = TYPE_ORDER.filter(t => totals[t] === max && max > 0);
+  return { totals, rows, sum, max, leaders };
+}
+
+// ---------- Render ----------
+const app = document.getElementById("app");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function render() {
+  app.innerHTML = "";
+  document.body.classList.toggle("has-bar", state.screen === "quiz");
+  if (state.screen === "intro") renderIntro();
+  else if (state.screen === "quiz") renderQuestion();
+  else renderResult();
+  save();
+}
+
+function renderIntro() {
+  const hasProgress = Object.keys(state.answers).length > 0;
+  app.innerHTML = `
+    <section class="card intro fade">
+      <div class="eyebrow">Диагностика трудовой мотивации</div>
+      <h1>Что на самом деле движет вами в работе?</h1>
+      <p>Внимательно прочитайте вопрос и все варианты ответов. В каждом вопросе указано, сколько вариантов можно выбрать — чаще всего один или два.</p>
+      <p class="muted">По итогам вы узнаете соотношение пяти типов мотивации по В. Герчикову и свой ведущий тип.</p>
+      <div class="facts">
+        <span class="fact">23 вопроса</span>
+        <span class="fact">≈ 7 минут</span>
+        <span class="fact">5 типов мотивации</span>
+      </div>
+      <div class="intro-actions">
+        <button class="btn btn-primary btn-block" id="startBtn">${hasProgress ? "Продолжить" : "Начать тест"}</button>
+        ${hasProgress ? `<button class="btn btn-ghost btn-block" id="resetBtn">Начать заново</button>` : ""}
+      </div>
+      <div class="types-preview">${TYPE_ORDER.map(t => `<span style="background:${TYPES[t].color}"></span>`).join("")}</div>
+    </section>`;
+  document.getElementById("startBtn").onclick = () => { state.screen = "quiz"; render(); };
+  const r = document.getElementById("resetBtn");
+  if (r) r.onclick = reset;
+}
+
+function hintFor(q) {
+  if (q.max === 1) return "Выберите один ответ";
+  if (q.max === 2) return "Можно выбрать один или два ответа";
+  return "Можно выбрать сколько угодно ответов";
+}
+
+function renderQuestion() {
+  const list = steps();
+  const q = list[state.step];
+  const picked = state.answers[q.id] || [];
+  const total = list.length;
+  const pct = Math.round((state.step / total) * 100);
+  const num = q.id === "role" ? "22–23" : q.id;
+  const groupNote = q.group ? `<div class="group-note">Как Вы относитесь к перечисленным ниже источникам дохода?</div>` : "";
+
+  app.innerHTML = `
+    <div class="progress">
+      <div class="progress-meta"><span>Вопрос ${state.step + 1} из ${total}</span><span>${pct}%</span></div>
+      <div class="progress-bar"><i style="width:${pct}%"></i></div>
+    </div>
+    <section class="card fade">
+      ${groupNote}
+      <div class="q-num">№ ${num}</div>
+      <h2 class="q-text">${esc(q.text)}</h2>
+      <div class="q-hint"><span class="pill">${q.max === 1 ? "1" : q.max === 2 ? "1–2" : "любое число"}</span>${hintFor(q)}</div>
+      <div class="options" role="group">
+        ${q.options.map((o, i) => `
+          <button class="opt ${q.max === 1 ? "radio" : ""}" data-n="${i + 1}" aria-pressed="${picked.includes(i + 1)}">
+            <span class="mark">${LETTERS[i]}</span><span class="label">${esc(o)}</span>
+          </button>`).join("")}
+      </div>
+    </section>
+    <div class="bottom-bar">
+      <div class="inner">
+        <div class="toast" id="toast" aria-live="polite"></div>
+        <div class="nav">
+          <button class="btn btn-ghost" id="backBtn">← Назад</button>
+          <button class="btn btn-primary" id="nextBtn" ${picked.length ? "" : "disabled"}>${state.step === total - 1 ? "Результат" : "Далее →"}</button>
+        </div>
+      </div>
+    </div>
+    <div class="kbd-hint">Клавиши <kbd>1</kbd>–<kbd>${q.options.length}</kbd> — выбор, <kbd>Enter</kbd> — далее</div>`;
+
+  app.querySelectorAll(".opt").forEach(b => b.onclick = () => toggle(q, +b.dataset.n, b));
+  document.getElementById("backBtn").onclick = back;
+  document.getElementById("nextBtn").onclick = next;
+}
+
+function toggle(q, n, el) {
+  let picked = (state.answers[q.id] || []).slice();
+  const toast = document.getElementById("toast");
+  toast.textContent = "";
+  if (q.max === 1) {
+    picked = [n];
+  } else if (picked.includes(n)) {
+    picked = picked.filter(x => x !== n);
+  } else if (picked.length >= q.max) {
+    toast.textContent = `Можно выбрать не более ${q.max} вариантов — снимите один из выбранных.`;
+    el.classList.remove("shake"); void el.offsetWidth; el.classList.add("shake");
+    return;
+  } else {
+    picked.push(n);
+  }
+  state.answers[q.id] = picked.sort((a, b) => a - b);
+
+  // Changing the role resets the branch answer that no longer applies
+  if (q.id === "role") delete state.answers[n === 1 ? 23 : 22];
+
+  app.querySelectorAll(".opt").forEach(b => b.setAttribute("aria-pressed", picked.includes(+b.dataset.n)));
+  document.getElementById("nextBtn").disabled = picked.length === 0;
+  save();
+
+  // Auto-advance on single-choice questions
+  if (q.max === 1) setTimeout(() => { if (state.screen === "quiz" && steps()[state.step] === q) next(); }, 260);
+}
+
+function next() {
+  const list = steps();
+  const q = list[state.step];
+  if (!(state.answers[q.id] || []).length) return;
+  if (state.step < list.length - 1) state.step++;
+  else state.screen = "result";
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function back() {
+  if (state.step === 0) state.screen = "intro";
+  else state.step--;
+  render();
+  window.scrollTo({ top: 0 });
+}
+
+function reset() {
+  state = { screen: "intro", step: 0, answers: {} };
+  render();
+}
+
+function renderResult() {
+  const { totals, rows, sum, max, leaders } = score();
+  const sorted = TYPE_ORDER.slice().sort((a, b) => totals[b] - totals[a]);
+  const leadNames = leaders.map(t => TYPES[t].name.toLowerCase());
+  const title = leaders.length > 1
+    ? `Смешанный тип: ${leadNames.join(" + ")}`
+    : `${TYPES[leaders[0]].name} тип`;
+
+  const bars = sorted.map(t => {
+    const share = sum ? Math.round(totals[t] / sum * 100) : 0;
+    const w = max ? (totals[t] / max) * 100 : 0;
+    return `
+      <div class="bar-row ${leaders.includes(t) ? "lead" : ""}">
+        <div class="bar-name"><span>${TYPES[t].name}</span><small>${TYPES[t].short}</small></div>
+        <div class="bar-track"><div class="bar-fill" data-w="${w}" style="background:${TYPES[t].color}"></div></div>
+        <div class="bar-val">${totals[t]}<small>${share}%</small></div>
+      </div>`;
+  }).join("");
+
+  const cards = sorted.map(t => `
+    <div class="type-card" style="--c:${TYPES[t].color}">
+      <h4><span>${TYPES[t].name}</span><span class="muted">${totals[t]} б.</span></h4>
+      <p>${TYPES[t].desc}</p>
+    </div>`).join("");
+
+  const tableRows = rows.map(({ q, picked, hits }) => `
+    <tr>
+      <td>${q.id}</td>
+      <td>${picked.map(n => LETTERS[n - 1]).join(", ")}</td>
+      ${TYPE_ORDER.map(t => {
+        const keys = (q.key[t] || []).map(n => LETTERS[n - 1]).join(", ");
+        return hits[t] ? `<td class="hit" title="Ключ: ${keys}">+${hits[t]}</td>` : `<td class="key-cell">${keys ? keys : "—"}</td>`;
+      }).join("")}
+    </tr>`).join("");
+
+  app.innerHTML = `
+    <div class="stack">
+      <section class="card result-head fade">
+        <div class="eyebrow">Ваш ведущий тип мотивации</div>
+        <h1 class="lead-type">${esc(title)}</h1>
+        <p class="lead-desc">${leaders.map(t => TYPES[t].desc).join("</p><p class='lead-desc'>")}</p>
+      </section>
+
+      <section class="card fade">
+        <h3>Профиль мотивации</h3>
+        <div class="bars">${bars}</div>
+        <p class="muted" style="font-size:14px;margin:18px 0 0">Каждый человек — сочетание пяти «чистых» типов в разных пропорциях. Баллы — число совпадений ответов с ключом; процент — доля от всех ${sum} баллов.</p>
+      </section>
+
+      <section class="card fade">
+        <h3>Все типы</h3>
+        <div class="type-cards">${cards}</div>
+      </section>
+
+      <section class="card fade">
+        <details class="key">
+          <summary>Таблица подсчёта по ключу</summary>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Вопрос</th><th>Ответ</th>${TYPE_ORDER.map(t => `<th>${TYPES[t].short}</th>`).join("")}</tr></thead>
+              <tbody>${tableRows}</tbody>
+              <tfoot><tr><td>Итого</td><td></td>${TYPE_ORDER.map(t => `<td>${totals[t]}</td>`).join("")}</tr></tfoot>
+            </table>
+          </div>
+          <p class="muted" style="font-size:13px;margin:10px 0 0">Выделены совпадения (+1 балл). В остальных ячейках — варианты ключа для этого типа.</p>
+        </details>
+      </section>
+
+      <div class="actions">
+        <button class="btn btn-primary btn-block" id="printBtn">Сохранить / распечатать</button>
+        <button class="btn btn-ghost btn-block" id="editBtn">Изменить ответы</button>
+        <button class="btn btn-ghost btn-block" id="againBtn">Пройти заново</button>
+      </div>
+    </div>`;
+
+  requestAnimationFrame(() => requestAnimationFrame(() =>
+    app.querySelectorAll(".bar-fill").forEach(b => b.style.width = b.dataset.w + "%")));
+  document.getElementById("printBtn").onclick = () => {
+    document.querySelector("details.key").open = true;
+    window.print();
+  };
+  document.getElementById("editBtn").onclick = () => { state.screen = "quiz"; state.step = 0; render(); };
+  document.getElementById("againBtn").onclick = reset;
+}
+
+// ---------- Keyboard ----------
+document.addEventListener("keydown", e => {
+  if (state.screen !== "quiz" || e.ctrlKey || e.metaKey || e.altKey) return;
+  const n = parseInt(e.key, 10);
+  if (n >= 1 && n <= 9) {
+    const btn = app.querySelector(`.opt[data-n="${n}"]`);
+    if (btn) btn.click();
+  } else if (e.key === "Enter" && !(document.activeElement && document.activeElement.classList.contains("opt"))) {
+    next();
+  } else if (e.key === "Backspace") {
+    back();
+  }
+});
+
+// ---------- Theme ----------
+document.getElementById("themeBtn").onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme
+    ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("motip-theme", root.dataset.theme); } catch (e) {}
+};
+try {
+  const t = localStorage.getItem("motip-theme");
+  if (t) document.documentElement.dataset.theme = t;
+} catch (e) {}
+
+load();
+render();
+</script>
+</body>
+</html>
