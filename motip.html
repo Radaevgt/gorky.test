@@ -372,7 +372,7 @@ function renderResult() {
       </section>
 
       <div class="actions">
-        <button class="btn btn-primary btn-block" id="printBtn">Сохранить / распечатать</button>
+        <button class="btn btn-primary btn-block" id="saveBtn">Сохранить результат</button>
         <button class="btn btn-ghost btn-block" id="editBtn">Изменить ответы</button>
         <button class="btn btn-ghost btn-block" id="againBtn">Пройти заново</button>
         <a class="btn btn-ghost btn-block" href="index.html" style="text-decoration:none">Все тесты</a>
@@ -381,10 +381,22 @@ function renderResult() {
 
   requestAnimationFrame(() => requestAnimationFrame(() =>
     app.querySelectorAll(".bar-fill").forEach(b => b.style.width = b.dataset.w + "%")));
-  document.getElementById("printBtn").onclick = () => {
-    document.querySelector("details.key").open = true;
-    window.print();
-  };
+  const image = prepareResultImage({
+    brand: "Тест МОТИП · Герчиков",
+    eyebrow: "Ведущий тип мотивации",
+    title,
+    descs: leaders.map(t => TYPES[t].desc),
+    barsTitle: "Профиль мотивации",
+    rows: sorted.map(t => ({
+      label: TYPES[t].name, sub: TYPES[t].short, value: totals[t],
+      share: sum ? Math.round(totals[t] / sum * 100) : 0,
+      width: max ? totals[t] / max * 100 : 0,
+      color: TYPES[t].color, lead: leaders.includes(t)
+    })),
+    note: "Баллы — число совпадений ответов с ключом, процент — доля от всех " + sum + " баллов.",
+    filename: "motip-rezultat"
+  });
+  document.getElementById("saveBtn").onclick = () => image.save();
   document.getElementById("editBtn").onclick = () => { state.screen = "quiz"; state.step = 0; render(); };
   document.getElementById("againBtn").onclick = reset;
 }

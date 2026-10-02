@@ -325,7 +325,7 @@ function renderResult() {
       </section>
 
       <div class="actions">
-        <button class="btn btn-primary btn-block" id="printBtn">Сохранить / распечатать</button>
+        <button class="btn btn-primary btn-block" id="saveBtn">Сохранить результат</button>
         <button class="btn btn-ghost btn-block" id="editBtn">Изменить ответы</button>
         <button class="btn btn-ghost btn-block" id="againBtn">Пройти заново</button>
         <a class="btn btn-ghost btn-block" href="index.html" style="text-decoration:none">Все тесты</a>
@@ -334,10 +334,22 @@ function renderResult() {
 
   requestAnimationFrame(() => requestAnimationFrame(() =>
     app.querySelectorAll(".bar-fill").forEach(b => b.style.width = b.dataset.w + "%")));
-  document.getElementById("printBtn").onclick = () => {
-    document.querySelector("details.key").open = true;
-    window.print();
-  };
+  const image = prepareResultImage({
+    brand: "Корпоративная культура",
+    eyebrow: "Преобладающий цвет культуры",
+    title,
+    descs: leaders.map(c => COLORS[c].desc),
+    barsTitle: "Распределение ответов",
+    rows: sorted.map(c => ({
+      label: COLORS[c].name, sub: COLORS[c].nick, value: totals[c],
+      share: sum ? Math.round(totals[c] / sum * 100) : 0,
+      width: max ? totals[c] / max * 100 : 0,
+      color: COLORS[c].color, lead: leaders.includes(c)
+    })),
+    note: "Ответов: " + sum + ". Обычно в компании сочетаются два-три цвета.",
+    filename: "kultura-rezultat"
+  });
+  document.getElementById("saveBtn").onclick = () => image.save();
   document.getElementById("editBtn").onclick = () => { state.screen = "quiz"; state.step = 0; render(); };
   document.getElementById("againBtn").onclick = reset;
 }

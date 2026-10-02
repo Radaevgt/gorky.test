@@ -353,3 +353,16 @@
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
   }
+
+  /* ---------- Save-as-image fallback ---------- */
+  .save-overlay {
+    position: fixed; inset: 0; z-index: 50;
+    background: rgba(0, 0, 0, .6);
+    display: grid; place-items: center;
+    padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px));
+    overflow-y: auto;
+  }
+  .save-box { background: var(--surface); border-radius: var(--radius); padding: 16px; width: 100%; max-width: 480px; display: grid; gap: 12px; }
+  .save-box p { margin: 0; font-size: 14px; color: var(--muted); text-align: center; }
+  .save-box img { width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--line); -webkit-touch-callout: default; }
+  .btn[aria-busy="true"] { opacity: .6; pointer-events: none; }
