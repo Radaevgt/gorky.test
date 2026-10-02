@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f1ea" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#17140f" media="(prefers-color-scheme: dark)">
+<title>Корпоративная культура</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="top-left">
+      <a class="back" href="index.html" aria-label="Все тесты">←</a>
+      <div class="brand"><b>Культура</b><span> · цветовая модель</span></div>
+    </div>
+    <button class="icon-btn" id="themeBtn" title="Сменить тему" aria-label="Сменить тему">◐</button>
+  </header>
+  <main id="app">
+    <section class="card">
+      <h2>Корпоративная культура</h2>
+      <p class="muted" id="jsWarn">Если вы видите этот текст, значит, в этом приложении не работает JavaScript. Откройте страницу в обычном браузере: Chrome, Safari, Яндекс Браузер.</p>
+    </section>
+  </main>
+</div>
+
+<script src="common.js"></script>
+<script>
+window.onerror = function (msg, src, line) {
+  var w = document.getElementById("jsWarn");
+  if (w) w.textContent = "Ошибка: " + msg + " (строка " + line + ")";
+};
+</script>
+<script>
+// ---------- Data ----------
+const LETTERS = ["а", "б", "в", "г", "д"];
+
+const COLORS = {
+  PU: { name: "Фиолетовый", nick: "Семья", color: "var(--c-pu)",
+    desc: "Компания как большая семья во главе с заботливым «отцом». Ценят безопасность, лояльность и традиции, людей берегут, за ошибки не увольняют. Ключевые решения принимает руководитель, и принимаются они не быстро.",
+    plus: "Преданность сотрудников, тёплая атмосфера, стабильность.",
+    minus: "Изменения даются тяжело, управление «в ручном режиме», проблемы между подразделениями обсуждать не принято." },
+  RE: { name: "Красный", nick: "Вождь и бойцы", color: "var(--c-re)",
+    desc: "Сильный лидер-вождь сам решает, куда бежать, а команда бойцов быстро мобилизуется и берёт невозможные цели. Ценят силу, смелость и победу. Приоритеты меняются часто, к ошибкам относятся жёстко.",
+    plus: "Скорость, энергия, умение собраться в кризис.",
+    minus: "Хаос в целях, интриги между подразделениями, всё держится на одном человеке." },
+  BL: { name: "Синий", nick: "Механизм", color: "var(--c-bl)",
+    desc: "Организация работает как часы: понятные цели и план, регламенты, иерархия и грейды. Решения принимаются по правилам, за каждую ошибку известна санкция. Сотрудник — важная часть большого механизма.",
+    plus: "Надёжность, прозрачность, предсказуемое качество.",
+    minus: "Бюрократия, медленные изменения, мало инициативы снизу." },
+  OR: { name: "Оранжевый", nick: "Достижения", color: "var(--c-or)",
+    desc: "Стратегия на несколько лет, цели каскадируются до каждого подразделения, всё измеряется через OKR и KPI. Харизматичный лидер ставит амбициозные задачи и прислушивается к команде. Ценят успех, результат и честную конкуренцию.",
+    plus: "Рост, амбиции, предпринимательский подход, решения на цифрах.",
+    minus: "Гонка за показателями, риск выгорания, люди воспринимаются как ресурс." },
+  GR: { name: "Зелёный", nick: "Команда", color: "var(--c-gr)",
+    desc: "Иерархии почти нет, двери руководителей открыты, решения ищут через обсуждение и консенсус. Руководитель — коуч, который развивает людей. Ошибки считаются частью развития, инициатива часто идёт от сотрудников.",
+    plus: "Вовлечённость, открытость, инновации, свобода.",
+    minus: "Долгие согласования, расфокус, цели могут размываться." },
+};
+const COLOR_ORDER = ["PU", "RE", "BL", "OR", "GR"];
+const ASK = "Какое утверждение лучше всего описывает вашу компанию?";
+
+// Each option belongs to exactly one color (order as in the source document)
+const QUESTIONS = [
+  { id: 1, topic: "Конкуренция внутри и вовне", options: [
+    ["У нас в компании нет конкуренции, атмосфера семейная. При этом говорить открыто о проблемах с другими подразделениями бывает сложно", "PU"],
+    ["У нас в компании нет внутренней конкуренции, мы реализуем много кросс-функциональных проектов и максимально открыто обсуждаем проблемы", "GR"],
+    ["У нас в компании нет конкуренции, поскольку большинство участков работы четко поделены, каждый понимает, что ему нужно делать", "BL"],
+    ["Нам нравится конкурировать и внутри, и вовне, нравится быть первыми, а соревновательный дух заряжает нас энергией", "OR"],
+    ["В нашей компании достаточно высокий уровень конкуренции, вовне конкуренты также ведут себя агрессивно. Иногда возможны интриги и споры между подразделениями", "RE"] ] },
+  { id: 2, topic: "Отношение к целям", options: [
+    ["В компании нет четкой стратегии, цели ставятся руководством довольно хаотично, приоритеты быстро меняются. При этом мы можем быстро собраться и достигнуть целей, которые другим кажутся невыполнимыми", "RE"],
+    ["В компании нет четкой стратегии, мы больше ориентированы на то, чтобы сохранить то, чего уже достигли и что умеем делать", "PU"],
+    ["В компании несколько целей, но они очень гибкие и могут меняться в процессе", "GR"],
+    ["В компании есть понятные цели и четкий план по их достижению", "BL"],
+    ["В компании есть стратегические цели и видение на несколько лет. В целом мы активно работаем со стратегией и каскадируем стратегические цели на все подразделения", "OR"] ] },
+  { id: 3, topic: "Как строится управление организацией", options: [
+    ["Больше всего нам подходит управление по целям или OKR. Мы регулярно отслеживаем движение к ним, это встроено в нашу систему KPI", "OR"],
+    ["У нас внедрена и работает система управления операционной эффективностью (lean management, канбан) / качественно выстроены процессы, работают практики регулярного менеджмента", "BL"],
+    ["Мы пытаемся работать с целями, но это не всегда получается. Руководители могут резко поменять цели, которые сами же поставили. Можно сказать, что управление осуществляется в ручном режиме", "RE"],
+    ["Управление осуществляется в ручном режиме, сотрудники не знают, как происходит планирование", "PU"],
+    ["Управление по ценностям: сотрудники активно вовлечены в процесс планирования", "GR"] ] },
+  { id: 4, topic: "Отношение к ошибкам", options: [
+    ["В нашей компании ошибки лучше не совершать. Могут сильно отчитать/отругать или даже уволить. Реакция на ошибки у руководителей разная, но в большей мере отношение достаточно жесткое", "RE"],
+    ["В нашей компании есть более-менее четкое понимание, за какие ошибки какое наказание/штраф последует. В целом ошибку совершить можно, но повторять ошибки — нельзя", "BL"],
+    ["Мы считаем, что не ошибается тот, кто ничего не делает. Ошибки — обратная сторона развития. Много экспериментировать, тестировать гипотезы, двигаться вперед — часть нашей культуры. Даже если сильно ошибся, у нас простят", "GR"],
+    ["У нас есть понимание, за какие ошибки какие санкции последуют. Мы знаем, как ошибки могут повлиять на достижение наших целей и KPI. Готовы прощать их, если это не мешает нашему движению к целям", "OR"],
+    ["В целом, у нас можно допускать ошибки. Конечно, это особо не приветствуется, за ошибки не похвалят, но и увольнять тоже не будут (за крайне редким и уж совсем вопиющим исключением)", "PU"] ] },
+  { id: 5, topic: "Отношение к изменениям", options: [
+    ["Сотрудники нашей компании внешне готовы к изменениям, но когда начинается реализация, переход к новому дается с большим трудом", "PU"],
+    ["Для нас важно, чтобы изменения согласовывались с нашей стратегией и целями компании", "OR"],
+    ["Мы любим экспериментировать и постоянно внедряем что-то новое, причем зачастую инициатива идет не от руководства, а от сотрудников. У нас в целом поощряется постоянное инновирование, хотя иногда это расфокусирует", "GR"],
+    ["Мы живем в постоянных изменениях: сегодня бежим туда, завтра в другую сторону. Руководители задают вектор, а сотрудники готовы быстро перестраиваться и двигаться к указанным целям", "RE"],
+    ["Нам непросто внедрять изменения, потому что это требует изменения большого количества регламентов и процедур", "BL"] ] },
+  { id: 6, topic: "Дистанция власти", options: [
+    ["В компании есть четкая иерархия, простроены грейды. Работают четкие каналы обратной связи с руководством, по ним сотрудники могут обратиться со своими запросами и получить ответ в понятные сроки", "BL"],
+    ["В компании довольно демократичная среда: можно спокойно подойти к руководителю и обсудить все вопросы. С топ-менеджментом выстроены регулярные каналы коммуникации и обратной связи (таунхолы, конференции и т.д.)", "OR"],
+    ["Руководители даже топ уровня доступны для всех сотрудников, можно прийти и обсудить любой вопрос — двери открыты. Сотрудник может напрямую решать вопросы с руководителем другого подразделения. Иерархия, скорее, отсутствует", "GR"],
+    ["В компании очень теплая, семейная атмосфера, со своим руководителем сотрудник может напрямую решить любой вопрос. Если же нужно обратиться к руководителям других подразделений, то корректнее действовать через своего босса", "PU"],
+    ["Генеральный директор лично знает многих сотрудников, может подойти пообщаться, однако все понимают, что топ-руководители — это очень высокий уровень, относятся к ним с большим почтением. Если в силу личных отношений есть выход на топов — можно решить любой вопрос. В обычном случае правильнее действовать через своего руководителя — и далее вверх по цепочке", "RE"] ] },
+  { id: 7, topic: "Кто стоит во главе компании", ask: "Кто стоит во главе вашей компании?", options: [
+    ["Сильный яркий лидер, настоящий вождь. Он сам принимает ключевые решения и лучше всех знает, как надо поступать в каждой ситуации. Сотрудники его одновременно и любят и немного боятся", "RE"],
+    ["Человек-функция, очень системный руководитель. Любит выстраивать процессы, чтобы организация работала как часы. Для него важно, чтобы все было четко и без сбоев", "BL"],
+    ["Харизматичный лидер, который ставит амбициозные цели и выстраивает системную работу по их достижению. Открытый, дружелюбный, яркий человек, которого подавляющее большинство сотрудников любит. Все хотят за ним идти. При принятии решений учитывает мнение команды, прислушивается к людям", "OR"],
+    ["Глава компании чем-то похож на заботливого отца, который максимально внимателен к сотрудникам и многое готов для них сделать. Все его сильно уважают и почитают", "PU"],
+    ["Руководитель — скорее фасилитатор-коуч — дает возможность раскрыться и проявить свои компетенции, управляет дискуссией, стимулирует каждого высказаться. Много внимания уделяет развитию сотрудников, с радостью делится тем, что для него важно", "GR"] ] },
+  { id: 8, topic: "Как принимаются решения", ask: "Как в вашей компании принимаются решения?", options: [
+    ["Подавляющее большинство важных решений руководитель принимает сам. В целом решения принимаются медленно", "PU"],
+    ["Подавляющее большинство важных решений руководитель принимает сам. В целом решения принимаются быстро", "RE"],
+    ["Решения принимаются на основе утвержденных правил и регламентов компании", "BL"],
+    ["Решения принимаются в обсуждении. Чаще всего — методом консенсуса, причем важно, чтобы участники действительно были согласны с решением. В целом сотрудникам дано много свободы в самостоятельном принятии решений, или руководитель просто утверждает то, что предлагает команда", "GR"],
+    ["Руководитель активно участвует в принятии решений, советуется с командой и учитывает мнение сотрудников. В принятии решений важную роль играют цифры и связь с целями компании", "OR"] ] },
+  { id: 9, topic: "Метафора для сотрудников", ask: "Какая метафора лучше всего описывает сотрудников компании?", options: [
+    ["Экспериментаторы, которым работа с коллегами в удовольствие", "GR"],
+    ["Бойцы, которым под силу любые задачи — во что бы то ни стало", "RE"],
+    ["Приверженцы своей компании и своего дела", "PU"],
+    ["Достигаторы, для которых важны успех и честная победа", "OR"],
+    ["Важные элементы большого механизма", "BL"] ] },
+  { id: 10, topic: "Ценности компании", ask: "Какой ряд ценностей лучше всего подходит вашей компании в настоящий момент?", options: [
+    ["Четкость, прозрачность, надежность, эффективность", "BL"],
+    ["Безопасность, забота, лояльность, человечность, консерватизм", "PU"],
+    ["Смелость, результат, победа, сила, невозможное возможно", "RE"],
+    ["Свобода, удовольствие, единство, инновационность", "GR"],
+    ["Успех, дерзость, результат, лидерство, предпринимательский подход", "OR"] ] },
+];
+
+// ---------- State ----------
+const STORE_KEY = "culture-state-v1";
+let state = { screen: "intro", step: 0, answers: {} };
+
+function save() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+}
+function load() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) state = Object.assign(state, JSON.parse(raw));
+  } catch (e) {}
+}
+
+// ---------- Scoring ----------
+function score() {
+  const totals = {};
+  COLOR_ORDER.forEach(c => { totals[c] = 0; });
+  const rows = [];
+  QUESTIONS.forEach(q => {
+    const n = state.answers[q.id];
+    if (!n) return;
+    const opt = q.options[n - 1];
+    totals[opt[1]] += 1;
+    rows.push({ q, n, text: opt[0], color: opt[1] });
+  });
+  const sum = rows.length;
+  const max = Math.max.apply(null, COLOR_ORDER.map(c => totals[c]));
+  const leaders = COLOR_ORDER.filter(c => totals[c] === max && max > 0);
+  return { totals, rows, sum, max, leaders };
+}
+
+// ---------- Render ----------
+const app = document.getElementById("app");
+const lower = s => s.charAt(0).toLowerCase() + s.slice(1);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function render() {
+  app.innerHTML = "";
+  document.body.classList.toggle("has-bar", state.screen === "quiz");
+  if (state.screen === "intro") renderIntro();
+  else if (state.screen === "quiz") renderQuestion();
+  else renderResult();
+  save();
+}
+
+function renderIntro() {
+  const hasProgress = Object.keys(state.answers).length > 0;
+  app.innerHTML = `
+    <section class="card intro fade">
+      <div class="eyebrow">Диагностика корпоративной культуры</div>
+      <h1>Какого цвета культура вашей компании?</h1>
+      <p>Перед вами 10 тем. В каждой выберите одно утверждение, которое точнее всего описывает вашу компанию сейчас, а не то, какой она должна быть.</p>
+      <p class="muted">В конце вы увидите, какой из пяти цветов преобладает и как распределились ответы.</p>
+      <div class="facts">
+        <span class="fact">10 вопросов</span>
+        <span class="fact">≈ 4 минуты</span>
+        <span class="fact">5 цветов</span>
+      </div>
+      <div class="intro-actions">
+        <button class="btn btn-primary btn-block" id="startBtn">${hasProgress ? "Продолжить" : "Начать тест"}</button>
+        ${hasProgress ? `<button class="btn btn-ghost btn-block" id="resetBtn">Начать заново</button>` : ""}
+      </div>
+      <div class="types-preview">${COLOR_ORDER.map(c => `<span style="background:${COLORS[c].color}"></span>`).join("")}</div>
+    </section>`;
+  document.getElementById("startBtn").onclick = () => { state.screen = "quiz"; render(); };
+  const r = document.getElementById("resetBtn");
+  if (r) r.onclick = reset;
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[state.step];
+  const picked = state.answers[q.id];
+  const total = QUESTIONS.length;
+  const pct = Math.round((state.step / total) * 100);
+
+  app.innerHTML = `
+    <div class="progress">
+      <div class="progress-meta"><span>Вопрос ${state.step + 1} из ${total}</span><span>${pct}%</span></div>
+      <div class="progress-bar"><i style="width:${pct}%"></i></div>
+    </div>
+    <section class="card fade">
+      <div class="q-num">${esc(q.topic)}</div>
+      <h2 class="q-text">${esc(q.ask || ASK)}</h2>
+      <div class="q-hint"><span class="pill">1</span>Выберите одно утверждение</div>
+      <div class="options" role="group">
+        ${q.options.map((o, i) => `
+          <button class="opt radio" data-n="${i + 1}" aria-pressed="${picked === i + 1}">
+            <span class="mark">${LETTERS[i]}</span><span class="label">${esc(o[0])}</span>
+          </button>`).join("")}
+      </div>
+    </section>
+    <div class="bottom-bar">
+      <div class="inner">
+        <div class="toast" id="toast" aria-live="polite"></div>
+        <div class="nav">
+          <button class="btn btn-ghost" id="backBtn">← Назад</button>
+          <button class="btn btn-primary" id="nextBtn" ${picked ? "" : "disabled"}>${state.step === total - 1 ? "Результат" : "Далее →"}</button>
+        </div>
+      </div>
+    </div>
+    <div class="kbd-hint">Клавиши <kbd>1</kbd>–<kbd>5</kbd> — выбор, <kbd>Enter</kbd> — далее</div>`;
+
+  app.querySelectorAll(".opt").forEach(b => b.onclick = () => choose(q, +b.dataset.n));
+  document.getElementById("backBtn").onclick = back;
+  document.getElementById("nextBtn").onclick = next;
+}
+
+function choose(q, n) {
+  state.answers[q.id] = n;
+  app.querySelectorAll(".opt").forEach(b => b.setAttribute("aria-pressed", +b.dataset.n === n));
+  document.getElementById("nextBtn").disabled = false;
+  save();
+  // Auto-advance after a short pause so the choice is visible
+  setTimeout(() => { if (state.screen === "quiz" && QUESTIONS[state.step] === q) next(); }, 260);
+}
+
+function next() {
+  const q = QUESTIONS[state.step];
+  if (!state.answers[q.id]) return;
+  if (state.step < QUESTIONS.length - 1) state.step++;
+  else state.screen = "result";
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function back() {
+  if (state.step === 0) state.screen = "intro";
+  else state.step--;
+  render();
+  window.scrollTo({ top: 0 });
+}
+
+function reset() {
+  state = { screen: "intro", step: 0, answers: {} };
+  render();
+}
+
+function renderResult() {
+  const { totals, rows, sum, max, leaders } = score();
+  const sorted = COLOR_ORDER.slice().sort((a, b) => totals[b] - totals[a]);
+  const title = leaders.length > 1
+    ? `Смешанная: ${leaders.map(c => COLORS[c].name.toLowerCase()).join(" + ")}`
+    : `${COLORS[leaders[0]].name} — «${COLORS[leaders[0]].nick}»`;
+
+  const bars = sorted.map(c => {
+    const share = sum ? Math.round(totals[c] / sum * 100) : 0;
+    const w = max ? (totals[c] / max) * 100 : 0;
+    return `
+      <div class="bar-row ${leaders.includes(c) ? "lead" : ""}">
+        <div class="bar-name"${leaders.includes(c) ? ` style="color:${COLORS[c].color}"` : ""}><span>${COLORS[c].name}</span><small>${COLORS[c].nick}</small></div>
+        <div class="bar-track"><div class="bar-fill" data-w="${w}" style="background:${COLORS[c].color}"></div></div>
+        <div class="bar-val">${totals[c]}<small>${share}%</small></div>
+      </div>`;
+  }).join("");
+
+  const cards = sorted.map(c => `
+    <div class="type-card" style="--c:${COLORS[c].color}">
+      <h4><span>${COLORS[c].name} · ${COLORS[c].nick}</span><span class="muted">${totals[c]} из ${sum}</span></h4>
+      <p>${COLORS[c].desc}</p>
+      <ul><li>Сильные стороны: ${lower(COLORS[c].plus)}</li><li>Риски: ${lower(COLORS[c].minus)}</li></ul>
+    </div>`).join("");
+
+  const answers = rows.map(r => `
+    <div class="answer-item">
+      <div class="topic"><span>${r.q.id}. ${esc(r.q.topic)}</span><span class="chip" style="--c:${COLORS[r.color].color}">${COLORS[r.color].name}</span></div>
+      <div class="text">${esc(r.text)}</div>
+    </div>`).join("");
+
+  app.innerHTML = `
+    <div class="stack">
+      <section class="card result-head fade">
+        <div class="eyebrow">Преобладающий цвет культуры</div>
+        <h1 class="lead-type">${esc(title)}</h1>
+        ${leaders.map(c => `<p class="lead-desc">${COLORS[c].desc}</p>`).join("")}
+      </section>
+
+      <section class="card fade">
+        <h3>Распределение ответов</h3>
+        <div class="bars">${bars}</div>
+        <p class="note">В реальной компании обычно сочетаются два-три цвета. Второй по силе цвет показывает, куда культура может развиваться или от чего уходит.</p>
+      </section>
+
+      <section class="card fade">
+        <h3>Все цвета</h3>
+        <div class="type-cards">${cards}</div>
+        <p class="note">Описания цветов — общая характеристика модели, на которой построен тест.</p>
+      </section>
+
+      <section class="card fade">
+        <details class="key">
+          <summary>Ваши ответы</summary>
+          <div class="answer-list">${answers}</div>
+        </details>
+      </section>
+
+      <div class="actions">
+        <button class="btn btn-primary btn-block" id="printBtn">Сохранить / распечатать</button>
+        <button class="btn btn-ghost btn-block" id="editBtn">Изменить ответы</button>
+        <button class="btn btn-ghost btn-block" id="againBtn">Пройти заново</button>
+        <a class="btn btn-ghost btn-block" href="index.html" style="text-decoration:none">Все тесты</a>
+      </div>
+    </div>`;
+
+  requestAnimationFrame(() => requestAnimationFrame(() =>
+    app.querySelectorAll(".bar-fill").forEach(b => b.style.width = b.dataset.w + "%")));
+  document.getElementById("printBtn").onclick = () => {
+    document.querySelector("details.key").open = true;
+    window.print();
+  };
+  document.getElementById("editBtn").onclick = () => { state.screen = "quiz"; state.step = 0; render(); };
+  document.getElementById("againBtn").onclick = reset;
+}
+
+// ---------- Keyboard ----------
+document.addEventListener("keydown", e => {
+  if (state.screen !== "quiz" || e.ctrlKey || e.metaKey || e.altKey) return;
+  const n = parseInt(e.key, 10);
+  if (n >= 1 && n <= 5) {
+    const btn = app.querySelector(`.opt[data-n="${n}"]`);
+    if (btn) btn.click();
+  } else if (e.key === "Enter" && !(document.activeElement && document.activeElement.classList.contains("opt"))) {
+    next();
+  } else if (e.key === "Backspace") {
+    back();
+  }
+});
+
+load();
+render();
+</script>
+</body>
+</html>
