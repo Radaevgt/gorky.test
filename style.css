@@ -274,6 +274,10 @@
     --c-bl: #2f63b3;
     --c-or: #db7a22;
     --c-gr: #3d8c4f;
+    --d-d: #c73a3a;
+    --d-i: #b8890a;
+    --d-s: #3d8c4f;
+    --d-c: #2f63b3;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
@@ -282,6 +286,10 @@
       --c-bl: #6f9ee6;
       --c-or: #f0a052;
       --c-gr: #6fbf7f;
+      --d-d: #e86a63;
+      --d-i: #e3bd4a;
+      --d-s: #6fbf7f;
+      --d-c: #6f9ee6;
     }
   }
   :root[data-theme="dark"] {
@@ -290,6 +298,10 @@
     --c-bl: #6f9ee6;
     --c-or: #f0a052;
     --c-gr: #6fbf7f;
+      --d-d: #e86a63;
+      --d-i: #e3bd4a;
+      --d-s: #6fbf7f;
+      --d-c: #6f9ee6;
   }
   @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { color-scheme: dark; } }
   :root[data-theme="dark"] { color-scheme: dark; }
@@ -347,7 +359,7 @@
   }
   @media (min-width: 640px) {
     .hero { padding: 20px 0 32px; }
-    .tests { grid-template-columns: 1fr 1fr; gap: 18px; }
+    .tests { gap: 18px; }
     .test-card { padding: 28px; border-radius: 20px; }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -366,3 +378,25 @@
   .save-box p { margin: 0; font-size: 14px; color: var(--muted); text-align: center; }
   .save-box img { width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--line); -webkit-touch-callout: default; }
   .btn[aria-busy="true"] { opacity: .6; pointer-events: none; }
+
+  /* ---------- Landing with three tests ---------- */
+  .wrap.wide { max-width: 1080px; }
+  @media (min-width: 960px) {
+    .tests { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .test-card { grid-template-rows: auto auto auto 1fr auto auto; }
+  }
+
+  /* ---------- DISC result ---------- */
+  .score-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 20px; }
+  .tile { border: 1px solid var(--line); border-top: 4px solid var(--c); border-radius: 12px; padding: 10px 8px; text-align: center; }
+  .tile b { display: block; font-size: 26px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .tile span { font-size: 13px; color: var(--muted); font-weight: 700; }
+  .tile.lead { background: var(--accent-soft); }
+  .secondary { margin: 14px 0 0; font-weight: 600; }
+  .markers { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 12px 0 0; font-size: 15px; }
+  .markers dt { color: var(--muted); }
+  .markers dd { margin: 0; }
+  .type-card .sub { margin-top: 10px; }
+  .type-card details summary { cursor: pointer; font-weight: 700; margin-top: 12px; min-height: 32px; display: flex; align-items: center; }
+  .type-card details p { margin-top: 6px; }
+  .motto { font-style: italic; color: var(--ink) !important; margin-top: 8px !important; }
